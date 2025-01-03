@@ -2,12 +2,12 @@
 // Function to save preferences in cookies
 function savePreferences() {
     // Get the values from the form
-    const fontSize = document.getElementById('fontSize').value;
-    const fontColor = document.getElementById('fontColor').value;
+    const fontsize = document.getElementById('fontsize').value;
+    const fontcolor = document.getElementById('fontcolor').value;
 
     // Set cookies to store the preferences (with an expiry of 1 year)
-    document.cookie = `fontSize=${fontSize}; expires=${getExpirationDate()}; path=/`;
-    document.cookie = `fontColor=${fontColor}; expires=${getExpirationDate()}; path=/`;
+    document.cookie = `fontsize=${fontsize}; expires=${getExpirationDate()}; path=/`;
+    document.cookie = `fontcolor=${fontcolor}; expires=${getExpirationDate()}; path=/`;
 
     // Apply preferences immediately after saving
     applyPreferences();
@@ -25,23 +25,23 @@ function applyPreferences() {
     // Get cookies
     const cookies = document.cookie.split(';');
 
-    let fontSize = 16;  // Default font size
-    let fontColor = '#000000';  // Default font color
+    let fontsize = 16;  // Default font size
+    let fontcolor = '#000000';  // Default font color
 
     cookies.forEach(cookie => {
         // Trim whitespace and split each cookie into name and value
         const [name, value] = cookie.trim().split('=');
 
-        if (name === 'fontSize') {
-            fontSize = value;
-        } else if (name === 'fontColor') {
-            fontColor = value;
+        if (name === 'fontsize') {
+            fontsize = value;
+        } else if (name === 'fontcolor') {
+            fontcolor = value;
         }
     });
 
     // Apply the preferences to the page
-    document.body.style.fontSize = fontSize + 'px';
-    document.body.style.color = fontColor;
+    document.body.style.fontsize = fontsize + 'px';
+    document.body.style.color = fontcolor;
 }
 
 // Call applyPreferences on page load to apply the saved preferences
