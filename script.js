@@ -1,50 +1,47 @@
 //your JS code here. If required.
-// Function to save preferences in cookies
-function savePreferences() {
-    // Get the values from the form
-    const fontsize = document.getElementById('fontsize').value;
-    const fontcolor = document.getElementById('fontcolor').value;
-
-    // Set cookies to store the preferences (with an expiry of 1 year)
-    document.cookie = `fontsize=${fontsize}; expires=${getExpirationDate()}; path=/`;
-    document.cookie = `fontcolor=${fontcolor}; expires=${getExpirationDate()}; path=/`;
-
-    // Apply preferences immediately after saving
-    applyPreferences();
+// Function to set a cookie
+function setCookie(name, value, days) {
+  const date = new Date();
+  date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+  document.cookie = `${name}=${value};expires=${date.toUTCString()};path=/`;
 }
 
-// Function to get the expiration date for the cookie (1 year from now)
-function getExpirationDate() {
-    const date = new Date();
-    date.setFullYear(date.getFullYear() + 1); // Set expiration to 1 year
-    return date.toUTCString();
+// Function to get a cookie value
+function getCookie(name) {
+  const cookies = document.cookie.split("; ");
+  for (const cookie of cookies) {
+    const [key, value] = cookie.split("=");
+    if (key === name) return value;
+  }
+  return null;
 }
 
-// Function to apply preferences from cookies
+// Apply preferences from cookies
 function applyPreferences() {
-    // Get cookies
-    const cookies = document.cookie.split(';');
+  const fontSize = getCookie("fontsize");
+  const fontColor = getCookie("fontcolor");
 
-    let fontsize = 16;  // Default font size
-    let fontcolor = '#000000';  // Default font color
-
-    cookies.forEach(cookie => {
-        // Trim whitespace and split each cookie into name and value
-        const [name, value] = cookie.trim().split('=');
-
-        if (name === 'fontsize') {
-            fontsize = value;
-        } else if (name === 'fontcolor') {
-            fontcolor = value;
-        }
-    });
-
-    // Apply the preferences to the page
-    document.body.style.fontsize = fontsize + 'px';
-    document.body.style.color = fontcolor;
+  if (fontSize) {
+    document.body.style.fontSize = `${fontSize}px`;
+    document.getElementById("fontsize").value = fontSize;
+  }
+  if (fontColor) {
+    document.body.style.color = fontColor;
+    document.getElementById("fontcolor").value = fontColor;
+  }
 }
 
-// Call applyPreferences on page load to apply the saved preferences
-window.onload = function() {
-    applyPreferences();
-};
+// Save preferences on form submission
+document.getElementById("customization-form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const fontSize = document.getElementById("fontsize").value;
+  const fontColor = document.getElementById("fontcolor").value;
+
+  setCookie("fontsize", fontSize, 365);
+  setCookie("fontcolor", fontColor, 365);
+
+  applyPreferences();
+});
+
+// Apply preferences when the page loads
+window.onload = applyPreferences;
